@@ -1,5 +1,4 @@
 #python
-from tkinter import N
 from typing import Optional
 from uuid import UUID
 from datetime import date, datetime
