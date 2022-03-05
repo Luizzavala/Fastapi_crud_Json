@@ -16,6 +16,7 @@ class UserLogin(UserBase):
                           max_length=64)
 
 class User(UserBase):
+    
     first_name : str = Field(...,
                              min_length=1,
                              max_length=50,
@@ -31,9 +32,11 @@ class User(UserBase):
     birth_date : Optional[date] =Field(default=None,
                                        title="birthdate",
                                        description="User´s birthdate ")
+
+class UserRegister(User, UserLogin):
+    pass    
     
-    
-class tweet(BaseModel):
+class Tweet(BaseModel):
     tweet_id : UUID = Field(...)
     content: str = Field(...,
                          min_length=1,
