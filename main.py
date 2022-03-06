@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+import json
+from fastapi import Body, FastAPI
 from fastapi import status
 from typing import List, Dict
 #modules
-from modules.models import UserBase, UserLogin, User, Tweet
+from modules.models import UserBase, UserLogin, User, Tweet, UserRegister
 app = FastAPI()
 
 
@@ -16,8 +17,36 @@ app = FastAPI()
     summary="Register a User",
     tags=["Users"],
 )
-def singup():
-    pass
+def singup(user: UserRegister = Body(...
+                                     )):
+    """**_summary_**</br>
+    This function, Create at User new.</br>
+    
+    **Parameters:** </br>
+    user : UserRegister = Body with :</br>
+    - user_id</br>
+    - email</br>
+    - password</br>
+    - first_name</br>
+    - last_name</br>
+    - birth_date </br>
+      
+    **Return:**</br>
+    response with user body: user and verification 201 created a user into json dict
+    
+    """
+    with open("json/users.json", "r+", encoding="utf-8") as f:
+        results = json.loads(f.read())
+        # transform model that json for work in this
+        user_dict = user.dict()
+        # castings vars, for havent future problems
+        user_dict["user_id"] = str(user_dict["user_id"]) 
+        user_dict["birth_date"] = str(user_dict["birth_date"])
+        results.append(user_dict)
+        f.seek(0)
+        f.write(json.dumps(results))
+        return user
+ 
 
 ### Login a user
 @app.post(
