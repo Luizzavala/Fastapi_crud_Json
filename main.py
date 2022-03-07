@@ -76,7 +76,7 @@ def show_all_users():
     This path operation show all users in the app</br>
     
     **returns:**</br>
-    return a json listo witch all users in the app, with the followings keys
+    return a json list witch all users in the app, with the followings keys
     - user_id</br>
     - email</br>
     - first_name</br>
@@ -132,6 +132,12 @@ def update_a_user():
         tags=["Tweets"],         
          )
 def home():
+    """_summary_: </br>
+    This path operation, shows all tweets
+
+    Returns:</br>
+        Returns: return a json list with all tweets in the profile
+    """
     with open("json/tweets.json", "r", encoding="utf-8") as f:
         results = json.loads(f.read())
         return results
@@ -144,8 +150,39 @@ def home():
     summary="Created at tweet",
     tags=["Tweets"],
 )
-def post():
-    pass
+def post(tweet : Tweet = Body (...,
+    )):
+    """ **_summary_**</br>
+    This path operation post a tweet in the app
+        
+    **Parameters:** </br>
+    tweet: Tweet = request body 
+
+          
+    **Return:**</br>
+    Response a json with the basic Tweet information:
+    - tweet_id : UUID 
+    - content: str 
+    - created_at: datetime  
+    - updated_at: Optional[datetime] 
+    - by: User 
+    """
+    with open("json/tweets.json", "r+", encoding="utf-8") as f:
+        results = json.loads(f.read())
+        # transform model that json for work in this
+        tweet_dict = tweet.dict()
+        # castings vars, for havent future problems
+        tweet_dict["tweet_id"] = str(tweet_dict["tweet_id"]) 
+        tweet_dict["created_at"] = str(tweet_dict["created_at"])
+        # if exists, cast
+        tweet_dict["updated_at"] =str(tweet_dict["updated_at"])
+        ## casting keys with uuid and date format
+        tweet_dict["by"]["user_id"] = str(tweet_dict["by"]["user_id"])
+        tweet_dict["by"]["birth_date"] = str(tweet_dict["by"]["birth_date"])
+        results.append(tweet_dict)
+        f.seek(0)
+        f.write(json.dumps(results))
+        return tweet
 
 ### Show a tweet
 @app.get(

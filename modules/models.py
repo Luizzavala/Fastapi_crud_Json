@@ -68,6 +68,19 @@ class Tweet(BaseModel):
                          min_length=1,
                          max_length=256)
     created_at: datetime  = Field(default=datetime.now())
-    update_at: Optional[datetime] = Field(default=None)
+    updated_at: Optional[datetime] = Field(default=None)
     by: User = Field(...)
+    
+    # class config:
+    #     eschema_extra = {
+    #         "example":{
+    #             "tweet_id" : UUID,
+    #             "content" : "Esto es un tweet",
+    #             "created_at" : datetime.now(),
+                            
+                
+    #         }
+            
+    #     }
+    
     
