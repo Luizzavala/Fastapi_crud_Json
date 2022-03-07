@@ -33,7 +33,11 @@ def singup(user: UserRegister = Body(...
       
     **Return:**</br>
     response with user body: user and verification 201 created a user into json dict
-    
+    - user_id</br>
+    - email</br>
+    - first_name</br>
+    - last_name</br>
+    - birth_date </br>
     """
     with open("json/users.json", "r+", encoding="utf-8") as f:
         results = json.loads(f.read())
@@ -68,7 +72,21 @@ def login():
     tags=["Users"],
 )
 def show_all_users():
-    pass
+    """**_summary_**</br>
+    This path operation show all users in the app</br>
+    
+    **returns:**</br>
+    return a json listo witch all users in the app, with the followings keys
+    - user_id</br>
+    - email</br>
+    - first_name</br>
+    - last_name</br>
+    - birth_date </br>
+    """
+    with open("json/users.json", "r", encoding="utf-8") as f:
+        results = json.loads(f.read())
+        return results
+
 
 ### Show a user
 @app.get(
@@ -114,7 +132,9 @@ def update_a_user():
         tags=["Tweets"],         
          )
 def home():
-    return {"API": "Working!"}
+    with open("json/tweets.json", "r", encoding="utf-8") as f:
+        results = json.loads(f.read())
+        return results
 
 ### Created at tweet
 @app.post(
