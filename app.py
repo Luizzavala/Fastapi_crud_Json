@@ -105,8 +105,16 @@ def show_all_users():
     summary="Show a User",
     tags=["Users"],
 )
-def show_a_user():
-    pass
+def show_a_user(user_id : str = Body(...)):
+    with open("json/users.json", "r", encoding="utf-8") as f:
+        users = json.loads(f.read())
+    
+    for user in users:
+        if user["user_id"] == user_id:
+            return user
+        else:
+            return {"Error404" : "Notfound"} 
+
 
 ### Delete a user
 @app.delete(
@@ -201,8 +209,15 @@ def post(tweet : Tweet = Body (...,
     summary="show a tweet",
     tags=["Tweets"],
 )
-def show_a_tweet():
-    pass
+def show_a_tweet(tweet_id : str = Body(...)):
+    with open("json/tweets.json", "r", encoding="utf-8") as f:
+        tweets = json.loads(f.read())
+    
+    for user in tweets:
+        if user["tweet_id"] == tweet_id:
+            return user
+        else:
+            return {"Error404" : "Notfound"} 
 
 ### Delete a tweet
 @app.delete(
