@@ -2,12 +2,21 @@ import json
 from fastapi import Body, FastAPI
 from fastapi import status
 from typing import List, Dict
+from starlette.responses import RedirectResponse
 #modules
 from modules.models import UserBase, UserLogin, User, Tweet, UserRegister
 app = FastAPI()
 
 
 #path operations
+@app.get(
+    path="/",
+    status_code=status.HTTP_200_OK,
+    summary="Redirect to Docs",
+    tags=["Index"],
+)
+def index():
+    return RedirectResponse(url="/docs/")
 ## users
 ### Register a user
 @app.post(
@@ -125,13 +134,13 @@ def update_a_user():
 ##tweets
 ### Show all tweets
 @app.get(
-        path="/",
+        path="/tweets",
         response_model=List[Tweet],
         status_code= status.HTTP_200_OK,
         summary="show all tweets",
         tags=["Tweets"],         
          )
-def home():
+def show_all_tweets():
     """_summary_: </br>
     This path operation, shows all tweets
 
