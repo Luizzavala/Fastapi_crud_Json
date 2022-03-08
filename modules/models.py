@@ -6,13 +6,12 @@ from datetime import date, datetime
 from pydantic import BaseModel, EmailStr, Field
 
 class UserBase(BaseModel):
-    user_id : str = Field(default=str(uuid()))
+    user_id : Optional[str]
     email : EmailStr = Field(...)
     
     class config:
         eschema_extra = {
             "example":{
-                "user_id" : str(uuid),
                 "email" : "luis@example.com"
             }
         }
@@ -58,7 +57,6 @@ class UserRegister(UserLogin, User):
     class config:
         eschema_extra = {
             "example":{
-                "user_id" : str(uuid),
                 "email" : "example@gmail.com",           
                 "password" : "thismybadpassword",
                 "first_name" : "Luis",
@@ -68,7 +66,7 @@ class UserRegister(UserLogin, User):
         }
  
 class Tweet(BaseModel):
-    tweet_id : str = Field(default=str(uuid()))
+    tweet_id : Optional[str]
     content: str = Field(...,
                          min_length=1,
                          max_length=256)

@@ -3,6 +3,7 @@ from fastapi import Body, FastAPI
 from fastapi import status, HTTPException
 from typing import List, Dict
 from starlette.responses import RedirectResponse
+from uuid import uuid4 as uuid
 #modules
 from modules.models import UserBase, UserLogin, User, Tweet, UserRegister
 app = FastAPI()
@@ -50,10 +51,11 @@ def singup(user: UserRegister = Body(...
     """
     with open("json/users.json", "r+", encoding="utf-8") as f:
         results = json.loads(f.read())
+        #created uuid for new user
+        user.user_id = str(uuid()) 
         # transform model that json for work in this
         user_dict = user.dict()
         # castings vars, for havent future problems
-        user_dict["user_id"] = str(user_dict["user_id"]) 
         user_dict["birth_date"] = str(user_dict["birth_date"])
         results.append(user_dict)
         f.seek(0)
@@ -194,7 +196,7 @@ def post(tweet : Tweet = Body (...,
         # transform model that json for work in this
         tweet_dict = tweet.dict()
         # castings vars, for havent future problems
-        tweet_dict["tweet_id"] = str(tweet_dict["tweet_id"]) 
+        tweet_dict["tweet_id"] = str(uuid()) 
         tweet_dict["created_at"] = str(tweet_dict["created_at"])
         # if exists, cast
         tweet_dict["updated_at"] =str(tweet_dict["updated_at"])
