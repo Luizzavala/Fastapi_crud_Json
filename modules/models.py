@@ -1,6 +1,6 @@
 #python
 from typing import Optional
-from uuid import UUID
+from uuid import uuid4 as UUID
 from datetime import date, datetime
 
 #pydantic
