@@ -1,6 +1,6 @@
 import json
 from fastapi import Body, FastAPI
-from fastapi import status
+from fastapi import status, HTTPException
 from typing import List, Dict
 from starlette.responses import RedirectResponse
 #modules
@@ -124,8 +124,15 @@ def show_a_user(user_id : str ):
     summary="Delete a User",
     tags=["Users"],
 )
-def delete_a_user():
-    pass
+def delete_a_user(user_id : str):
+    with open("json/users.json", "r+", encoding="utf-8") as f:
+        users = json.loads(f.read())
+        for index, user in enumerate(users):
+            if user["user_id"] == user_id:
+                users.pop(index)
+                f.write(json.dumps(users))
+                return {"message": "Post has been deleted succesfully"}
+    raise HTTPException(status_code=404, detail="Item not found")
 
 ### Update a user
 @app.put(
