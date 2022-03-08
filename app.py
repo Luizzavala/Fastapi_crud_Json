@@ -1,8 +1,9 @@
 import json
 from fastapi import Body, FastAPI
-from fastapi import status
+from fastapi import status, HTTPException
 from typing import List, Dict
 from starlette.responses import RedirectResponse
+from uuid import uuid4 as uuid
 #modules
 from modules.models import UserBase, UserLogin, User, Tweet, UserRegister
 app = FastAPI()
@@ -50,10 +51,11 @@ def singup(user: UserRegister = Body(...
     """
     with open("json/users.json", "r+", encoding="utf-8") as f:
         results = json.loads(f.read())
+        #created uuid for new user
+        user.user_id = str(uuid()) 
         # transform model that json for work in this
         user_dict = user.dict()
         # castings vars, for havent future problems
-        user_dict["user_id"] = str(user_dict["user_id"]) 
         user_dict["birth_date"] = str(user_dict["birth_date"])
         results.append(user_dict)
         f.seek(0)
@@ -99,25 +101,38 @@ def show_all_users():
 
 ### Show a user
 @app.get(
-    path="/users/{user.id}",
+    path="/users/{user_id}",
     response_model=User,
     status_code=status.HTTP_200_OK,
     summary="Show a User",
     tags=["Users"],
 )
-def show_a_user():
-    pass
+def show_a_user(user_id : str ):
+    with open("json/users.json", "r", encoding="utf-8") as f:
+        users = json.loads(f.read())
+        for user in users:
+            if user["user_id"] == user_id:
+                return user
+            else:
+                raise HTTPException(status_code=404, detail="Item not found") 
+
 
 ### Delete a user
 @app.delete(
-    path="/users/{user.id}/delete",
-    response_model=User,
+    path="/users/{user_id}/delete",
     status_code=status.HTTP_200_OK,
     summary="Delete a User",
     tags=["Users"],
 )
-def delete_a_user():
-    pass
+def delete_a_user(user_id : str):
+    with open("json/users.json", "r+", encoding="utf-8") as f:
+        users = json.loads(f.read())
+        for index, user in enumerate(users):
+            if user["user_id"] == user_id:
+                users.pop(index)
+                f.write(json.dumps(users))
+                return {"message": "Post has been deleted succesfully"}
+    raise HTTPException(status_code=404, detail="Item not found")
 
 ### Update a user
 @app.put(
@@ -181,7 +196,7 @@ def post(tweet : Tweet = Body (...,
         # transform model that json for work in this
         tweet_dict = tweet.dict()
         # castings vars, for havent future problems
-        tweet_dict["tweet_id"] = str(tweet_dict["tweet_id"]) 
+        tweet_dict["tweet_id"] = str(uuid()) 
         tweet_dict["created_at"] = str(tweet_dict["created_at"])
         # if exists, cast
         tweet_dict["updated_at"] =str(tweet_dict["updated_at"])
@@ -201,8 +216,15 @@ def post(tweet : Tweet = Body (...,
     summary="show a tweet",
     tags=["Tweets"],
 )
-def show_a_tweet():
-    pass
+def show_a_tweet(tweet_id : str ):
+    with open("json/tweets.json", "r", encoding="utf-8") as f:
+        tweets = json.loads(f.read())
+    
+    for user in tweets:
+        if user["tweet_id"] == tweet_id:
+            return user
+        else:
+            return {"Error404" : "Notfound"} 
 
 ### Delete a tweet
 @app.delete(

@@ -1,19 +1,17 @@
 #python
 from typing import Optional
-from uuid import UUID
+from uuid import uuid4 as uuid
 from datetime import date, datetime
-
 #pydantic
 from pydantic import BaseModel, EmailStr, Field
 
 class UserBase(BaseModel):
-    user_id : UUID = Field(...)
+    user_id : Optional[str]
     email : EmailStr = Field(...)
     
     class config:
         eschema_extra = {
             "example":{
-                "user_id" : UUID,
                 "email" : "luis@example.com"
             }
         }
@@ -59,11 +57,16 @@ class UserRegister(UserLogin, User):
     class config:
         eschema_extra = {
             "example":{
+                "email" : "example@gmail.com",           
+                "password" : "thismybadpassword",
+                "first_name" : "Luis",
+                "last_name" : "zavala",
+                "birth_date" :"1985-08-05",
             }
         }
  
 class Tweet(BaseModel):
-    tweet_id : UUID = Field(...)
+    tweet_id : Optional[str]
     content: str = Field(...,
                          min_length=1,
                          max_length=256)
@@ -71,16 +74,15 @@ class Tweet(BaseModel):
     updated_at: Optional[datetime] = Field(default=None)
     by: User = Field(...)
     
-    # class config:
-    #     eschema_extra = {
-    #         "example":{
-    #             "tweet_id" : UUID,
-    #             "content" : "Esto es un tweet",
-    #             "created_at" : datetime.now(),
-                            
-                
-    #         }
+    class config:
+        eschema_extra = {
+            "example":{
+                    "tweet_id" : str(uuid),
+                    "content": "Esto es un twwet",
+                    
+            }
+        }
             
-    #     }
+
     
     
