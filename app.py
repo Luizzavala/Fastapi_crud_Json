@@ -99,7 +99,7 @@ def show_all_users():
 
 ### Show a user
 @app.get(
-    path="/users/{user.id}",
+    path="/users/{user_id}",
     response_model=User,
     status_code=status.HTTP_200_OK,
     summary="Show a User",
@@ -108,17 +108,16 @@ def show_all_users():
 def show_a_user(user_id : str ):
     with open("json/users.json", "r", encoding="utf-8") as f:
         users = json.loads(f.read())
-    
-    for user in users:
-        if user["user_id"] == user_id:
-            return user
-        else:
-            return {"Error404" : "Notfound"} 
+        for user in users:
+            if user["user_id"] == user_id:
+                return user
+            else:
+                raise HTTPException(status_code=404, detail="Item not found") 
 
 
 ### Delete a user
 @app.delete(
-    path="/users/{user.id}/delete",
+    path="/users/{user_id}/delete",
     response_model=User,
     status_code=status.HTTP_200_OK,
     summary="Delete a User",
