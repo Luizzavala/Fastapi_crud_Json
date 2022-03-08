@@ -118,7 +118,6 @@ def show_a_user(user_id : str ):
 ### Delete a user
 @app.delete(
     path="/users/{user_id}/delete",
-    response_model=User,
     status_code=status.HTTP_200_OK,
     summary="Delete a User",
     tags=["Users"],
