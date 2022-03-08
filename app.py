@@ -105,7 +105,7 @@ def show_all_users():
     summary="Show a User",
     tags=["Users"],
 )
-def show_a_user(user_id : str = Body(...)):
+def show_a_user(user_id : str ):
     with open("json/users.json", "r", encoding="utf-8") as f:
         users = json.loads(f.read())
     
@@ -209,7 +209,7 @@ def post(tweet : Tweet = Body (...,
     summary="show a tweet",
     tags=["Tweets"],
 )
-def show_a_tweet(tweet_id : str = Body(...)):
+def show_a_tweet(tweet_id : str ):
     with open("json/tweets.json", "r", encoding="utf-8") as f:
         tweets = json.loads(f.read())
     
