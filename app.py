@@ -1,4 +1,5 @@
 import json
+from tkinter.tix import TCL_WINDOW_EVENTS
 from fastapi import Body, FastAPI
 from fastapi import status, HTTPException
 from typing import List, Dict
@@ -70,6 +71,8 @@ def singup(user: UserRegister = Body(...
     status_code=status.HTTP_200_OK,
     summary="Login a User",
     tags=["Users"],
+    deprecated=True
+
 )
 def login():
     pass
@@ -128,10 +131,11 @@ def delete_a_user(user_id : str):
     with open("json/users.json", "r+", encoding="utf-8") as f:
         users = json.loads(f.read())
         for index, user in enumerate(users):
-            if user["user_id"] == user_id:
+            if user["user_id"] == user_id:  
                 users.pop(index)
-                f.write(json.dumps(users))
-                return {"message": "Post has been deleted succesfully"}
+                with open("json/users.json", "w", encoding="utf-8") as w:
+                    w.write(json.dumps(users))
+                    return {"message": "the user has been deleted succesfully"}
     raise HTTPException(status_code=404, detail="Item not found")
 
 ### Update a user
@@ -219,12 +223,10 @@ def post(tweet : Tweet = Body (...,
 def show_a_tweet(tweet_id : str ):
     with open("json/tweets.json", "r", encoding="utf-8") as f:
         tweets = json.loads(f.read())
-    
-    for user in tweets:
-        if user["tweet_id"] == tweet_id:
-            return user
-        else:
-            return {"Error404" : "Notfound"} 
+        for tweet in tweets:
+            if tweet["tweet_id"] == tweet_id:
+                return tweet
+            raise HTTPException(status_code=404, detail="Item not found")
 
 ### Delete a tweet
 @app.delete(
@@ -234,8 +236,16 @@ def show_a_tweet(tweet_id : str ):
     summary="Delete a tweet",
     tags=["Tweets"],
 )
-def delete_a_tweet():
-    pass
+def delete_a_tweet(tweet_id : str):
+    with open("json/tweets.json", "r+", encoding="utf-8") as f:
+        tweets = json.loads(f.read())
+        for index, tweet in enumerate(tweets):
+            if tweet["tweet_id"] == tweet_id:
+                tweets.pop(index)
+                
+                
+                return {"message": "Post has been deleted succesfully"}
+    raise HTTPException(status_code=404, detail="Item not found")
 
 ### Update a tweet
 @app.put(
