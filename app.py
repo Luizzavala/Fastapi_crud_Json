@@ -1,8 +1,7 @@
 import json
-from tkinter.tix import TCL_WINDOW_EVENTS
 from fastapi import Body, FastAPI
 from fastapi import status, HTTPException
-from typing import List, Dict
+from typing import List
 from starlette.responses import RedirectResponse
 from uuid import uuid4 as uuid
 #modules
