@@ -1,5 +1,4 @@
 import json
-from tkinter.tix import TCL_WINDOW_EVENTS
 from fastapi import Body, FastAPI
 from fastapi import status, HTTPException
 from typing import List, Dict
