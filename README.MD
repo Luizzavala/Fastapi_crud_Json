@@ -1,1 +1,2 @@
-# Hello, api clone for twetter.
+# CRUD, FAST_API
+    - EXAMPLE : TWEETER CLONE
