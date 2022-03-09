@@ -242,9 +242,9 @@ def delete_a_tweet(tweet_id : str):
         for index, tweet in enumerate(tweets):
             if tweet["tweet_id"] == tweet_id:
                 tweets.pop(index)
-                
-                
-                return {"message": "Post has been deleted succesfully"}
+                with open("json/tweets.json", "w", encoding="utf-8") as w:
+                    w.write(json.dumps(tweets))
+                    return {"message": "Post has been deleted succesfully"}
     raise HTTPException(status_code=404, detail="Item not found")
 
 ### Update a tweet
