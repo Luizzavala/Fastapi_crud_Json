@@ -1,11 +1,13 @@
+from datetime import datetime
 import json
 from fastapi import Body, FastAPI
 from fastapi import status, HTTPException
 from typing import List, Dict
+from pydantic import Field
 from starlette.responses import RedirectResponse
 from uuid import uuid4 as uuid
 #modules
-from modules.models import UserBase, UserLogin, User, Tweet, UserRegister
+from modules.models import UserBase, UserLogin, User, Tweet, UserRegister, UserUpdate, TweetUpdate
 app = FastAPI()
 
 
@@ -145,8 +147,19 @@ def delete_a_user(user_id : str):
     summary="Update a User",
     tags=["Users"],
 )
-def update_a_user():
-    pass
+def update_a_user(User):
+    r_User = User.dict()
+    with open("json/users.json", "r", encoding="utf-8") as f:
+        users = json.loads(f.read())
+        for user in users:
+            if user["user_id"] == r_User["user_id"]:
+                user["first_name"] = r_User["first_name"]
+                user["last_name"] = r_User["last_name"]
+                user["birth_date"] = r_User["birth_date"]
+                
+                return user
+            else:
+                raise HTTPException(status_code=404, detail="Item not found") 
 
 
 ##tweets
@@ -254,5 +267,14 @@ def delete_a_tweet(tweet_id : str):
     summary="update a tweet",
     tags=["Tweets"],
 )
-def update_a_tweet():
-    pass
+def update_a_tweet(update : TweetUpdate):
+    update.dict()
+    with open("json/users.json", "r", encoding="utf-8") as f:
+        tweets = json.loads(f.read())
+        for tweet in tweets:
+            if tweet["tweet_id"] == update["tweet_id"]:
+                
+                return tweet
+            else:
+                raise HTTPException(status_code=404, detail="Item not found") 
+

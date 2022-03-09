@@ -65,6 +65,32 @@ class UserRegister(UserLogin, User):
             }
         }
  
+class UserUpdate(BaseModel):
+    
+        first_name : str = Field(
+                             min_length=1,
+                             max_length=50,
+                             title="username",
+                             description="The username"
+                             )
+        last_name: str = Field(
+                            min_length=1,
+                            max_length=50,
+                            title="Lastname",
+                            description="The Lastname username"
+                            )
+        birth_date : Optional[date] =Field(default=None,
+                                       title="birthdate",
+                                       description="User´s birthdate ")
+        class config:        
+                eschema_extra = {
+                    "example":{
+                        "first_name" : "Luis",
+                        "last_name" : "zavala",
+                        "birth_date" :"1985-08-05",
+                    }
+                } 
+ 
 class Tweet(BaseModel):
     tweet_id : Optional[str]
     content: str = Field(...,
@@ -82,6 +108,15 @@ class Tweet(BaseModel):
                     
             }
         }
+            
+class TweetUpdate(BaseModel):
+    tweet_id : Optional[str]
+    content: str = Field(...,
+                         min_length=1,
+                         max_length=256)
+    updated_at: Optional[datetime] = Field(default=datetime.now())
+    
+            
             
 
     
